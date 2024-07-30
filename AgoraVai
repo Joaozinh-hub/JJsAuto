@@ -1,0 +1,65 @@
+-- Crie um ScreenGui e adicione um Frame
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "MessageGui"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 150)
+frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+frame.BackgroundColor3 = Color3.new(1, 1, 1)
+frame.Parent = screenGui
+
+-- Crie um botão para ativar/desativar as mensagens
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(1, 0, 1, 0)
+toggleButton.Text = "Ativar Mensagens"
+toggleButton.Parent = frame
+toggleButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+
+-- Variável para controle das mensagens automáticas
+local isEnabled = false
+
+-- Função para criar a mensagem com o número
+local function getMessage(number)
+    if number == 1 then
+        return "UM!"
+    elseif number == 2 then
+        return "DOIS!"
+    elseif number == 3 then
+        return "TRÊS!"
+    elseif number == 4 then
+        return "QUATRO!"
+    elseif number == 5 then
+        return "CINCO!"
+    -- Adicione mais condições para os números que deseja personalizar
+    else
+        return tostring(number) .. "!"
+    end
+end
+
+-- Função para enviar mensagens
+local function sendMessages()
+    for i = 1, 1000 do
+        if not isEnabled then return end
+        local message = getMessage(i)
+
+        -- Envia mensagem para o chat (ou exibe de outra forma, se desejar)
+        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(message, "All")
+
+        wait(1) -- Ajuste o intervalo entre mensagens, se necessário
+    end
+end
+
+-- Função para alternar mensagens automáticas
+local function toggleMessages()
+    isEnabled = not isEnabled
+    if isEnabled then
+        toggleButton.Text = "Desativar Mensagens"
+        sendMessages()
+    else
+        toggleButton.Text = "Ativar Mensagens"
+    end
+end
+
+-- Conectar o botão à função de alternância
+toggleButton.MouseButton1Click:Connect(toggleMessages)
