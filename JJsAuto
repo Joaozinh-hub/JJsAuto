@@ -1,0 +1,37 @@
+-- Referência ao botão
+local button = script.Parent
+
+-- Variável para controlar se o envio está ativo
+local sendingMessages = false
+
+-- Função para enviar mensagens de "UM!" até "MIL!"
+local function sendMessages()
+    for i = 1, 1000 do
+        if not sendingMessages then
+            break
+        end
+        
+        -- Envia a mensagem no chat
+        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(tostring(i).."!", "All")
+
+        -- Aguarda um pouco antes de enviar a próxima mensagem
+        wait(0.5)  -- Ajuste o tempo conforme necessário para evitar spam excessivo
+    end
+end
+
+-- Conecta a função de clique ao botão
+button.MouseButton1Click:Connect(function()
+    -- Alterna o estado do envio de mensagens
+    sendingMessages = not sendingMessages
+
+    -- Atualiza o texto do botão
+    if sendingMessages then
+        button.Text = "Parar Mensagens"
+        sendMessages()
+    else
+        button.Text = "Iniciar Mensagens"
+    end
+end)
+
+-- Inicializa o texto do botão
+button.Text = "Iniciar Mensagens"
